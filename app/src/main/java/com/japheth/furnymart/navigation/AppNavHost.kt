@@ -15,7 +15,7 @@ import com.japheth.furnymart.screens.home.HomeScreen
 fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = ROUT_HOME
+    startDestination: String = ROUT_CONTACT
 ) {
 
     NavHost(
