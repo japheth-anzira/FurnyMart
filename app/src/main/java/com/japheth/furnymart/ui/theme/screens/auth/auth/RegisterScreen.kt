@@ -1,4 +1,4 @@
-package com.Japheth.sokomart.ui.screens.auth
+package com.japheth.furnymart.ui.screens.auth
 
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
@@ -27,10 +27,10 @@ import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.Japheth.sokomart.R
-import com.Japheth.sokomart.model.User
-import com.Japheth.sokomart.navigation.ROUT_LOGIN
-import com.Japheth.sokomart.viewmodel.AuthViewModel
+import com.japheth.furnymart.R
+import com.japheth.furnymart.model.User
+import com.japheth.furnymart.navigation.ROUT_LOGIN
+import com.japheth.furnymart.viewmodel.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -145,7 +145,7 @@ fun RegisterScreen(
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             leadingIcon = { Icon(Icons.Filled.Lock, contentDescription = "Password Icon") },
             trailingIcon = {
-                val image = if (passwordVisible) painterResource(R.drawable.visibilityon)  else painterResource(R.drawable.visibilityoff)
+                val image = if (passwordVisible) painterResource(R.drawable.visibility)  else painterResource(R.drawable.visibilityoff)
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
                     Icon(image, contentDescription = if (passwordVisible) "Hide Password" else "Show Password")
                 }

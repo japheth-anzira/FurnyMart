@@ -2,8 +2,8 @@ package com.japheth.furnymart.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.Japheth.sokomart.model.User
-import com.Japheth.sokomart.repository.UserRepository
+import com.japheth.furnymart.model.User
+import com.japheth.furnymart.repository.UserRepository
 import kotlinx.coroutines.launch
 
 class AuthViewModel(private val repository: UserRepository) : ViewModel() {

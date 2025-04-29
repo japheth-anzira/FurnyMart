@@ -1,10 +1,10 @@
-package com.Japheth.sokomart.data
+package com.japheth.furnymart.data
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.Japheth.sokomart.model.User
+import com.japheth.furnymart.model.User
 
 @Database(entities = [User::class], version = 2, exportSchema = false)
 abstract class UserDatabase : RoomDatabase() {

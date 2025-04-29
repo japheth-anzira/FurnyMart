@@ -1,4 +1,4 @@
-package com.japheth.furnymart.screens.about
+package com.japheth.furnymart.ui.theme.screens.about
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

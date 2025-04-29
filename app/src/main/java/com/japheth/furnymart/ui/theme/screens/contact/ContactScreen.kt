@@ -1,4 +1,4 @@
-package com.japheth.furnymart.screens.contact
+package com.japheth.furnymart.ui.theme.screens.contact
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

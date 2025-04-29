@@ -1,4 +1,4 @@
-package com.Japheth.sokomart.ui.screens.auth
+package com.japheth.furnymart.ui.screens.auth
 
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
@@ -25,12 +25,11 @@ import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.Japheth.sokomart.navigation.ROUT_DASHBOARD
-import com.Japheth.sokomart.navigation.ROUT_ITEM
-import com.Japheth.sokomart.R
-import com.Japheth.sokomart.navigation.ROUT_LOGIN
-import com.Japheth.sokomart.navigation.ROUT_REGISTER
-import com.Japheth.sokomart.viewmodel.AuthViewModel
+import com.japheth.furnymart.R
+import com.japheth.furnymart.navigation.ROUT_CONTACT
+import com.japheth.furnymart.navigation.ROUT_HOME
+import com.japheth.furnymart.navigation.ROUT_REGISTER
+import com.japheth.furnymart.viewmodel.AuthViewModel
 
 @Composable
 fun LoginScreen(
@@ -50,10 +49,10 @@ fun LoginScreen(
                 Toast.makeText(context, "Invalid Credentials", Toast.LENGTH_SHORT).show()
             } else {
                 if (user.role == "admin") {
-                    navController.navigate(ROUT_ITEM) {
+                    navController.navigate(ROUT_HOME) {
                     }
                 } else {
-                    navController.navigate(ROUT_DASHBOARD) {
+                    navController.navigate(ROUT_CONTACT) {
                     }
                 }
             }
@@ -107,7 +106,7 @@ fun LoginScreen(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
             trailingIcon = {
-                val image = if (passwordVisible) painterResource(R.drawable.visibilityon) else painterResource(R.drawable.visibilityoff)
+                val image = if (passwordVisible) painterResource(R.drawable.visibility) else painterResource(R.drawable.visibilityoff)
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
                     Icon(image, contentDescription = if (passwordVisible) "Hide Password" else "Show Password")
                 }

@@ -1,7 +1,7 @@
 package com.japheth.furnymart.repository
 
-import com.Japheth.sokomart.data.UserDao
-import com.Japheth.sokomart.model.User
+import com.japheth.furnymart.data.UserDao
+import com.japheth.furnymart.model.User
 
 class UserRepository(private val userDao: UserDao) {
     suspend fun registerUser(user: User) {
