@@ -1,322 +1,176 @@
 package com.japheth.furnymart.ui.theme.screens.sofa
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconToggleButton
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.japheth.furnymart.R
 
+// Product model
+data class Product(
+    val id: Int,
+    val name: String,
+    val price: Double,
+    val imageResId: Int
+)
+
+// CartViewModel
+class CartViewModel : ViewModel() {
+    private val _cartItems = mutableStateListOf<Product>()
+    val cartItems: List<Product> get() = _cartItems
+
+    fun addToCart(product: Product) {
+        _cartItems.add(product)
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SofaScreen(navController: NavController){
-    Column(modifier = Modifier.fillMaxSize()
-        .padding(18.dp)) {
+fun SofaScreen(navController: NavController, cartViewModel: CartViewModel = viewModel()) {
+    val products = listOf(
+        Product(1, "Modern Sofa", 12000.0, R.drawable.newsofa),
+        Product(2, "Luxury Bed", 17000.0, R.drawable.bed1),
+        Product(3, "Wooden Table", 7500.0, R.drawable.table1),
+        Product(4, "Office Chair", 5350.0, R.drawable.chair1)
+    )
 
-        val mContext = LocalContext.current
-
-        TopAppBar(
-            title = { Text("Sofas") },
-            navigationIcon = {
-                IconButton(onClick = {}) {
-                    Icon(
-                        Icons.Default.ArrowBack,
-                        contentDescription = "Back"
-                    )
-                }
-            },
-            actions = {
-                IconButton(onClick = {}) {
-                    Icon(
-                        Icons.Default.Search,
-                        contentDescription = "Search"
-                    )
-                }
-            }
-        )
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        //Row
-        Row(
-            modifier = Modifier.padding(start = 20.dp).horizontalScroll(
-                rememberScrollState()
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text("Sofas & More", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                },
+                navigationIcon = {
+                    IconButton(onClick = { navController.navigate("home") }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { /* TODO: Add search functionality */ }) {
+                        Icon(Icons.Default.Search, contentDescription = "Search", tint = Color.White)
+                    }
+                    Box {
+                        IconButton(onClick = { navController.navigate("cart") }) {
+                            Icon(Icons.Default.ShoppingCart, contentDescription = "Cart", tint = Color.White)
+                        }
+                        if (cartViewModel.cartItems.isNotEmpty()) {
+                            Badge(
+                                modifier = Modifier
+                                    .align(Alignment.TopEnd)
+                                    .offset(x = (-4).dp, y = 4.dp),
+                                containerColor = Color.Red
+                            ) {
+                                Text("${cartViewModel.cartItems.size}")
+                            }
+                        }
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF6200EE))
             )
-        ) {
-
-            //Column
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                //Image
-                Image(
-                    painter = painterResource(R.drawable.newsofa),
-                    contentDescription = "img",
-                    modifier = Modifier.size(130.dp)
-                        .clip(shape = RoundedCornerShape(7.dp)),
-                    contentScale = ContentScale.FillBounds
-                )
-                //end of image
-
-
-
-                Text(
-                    text = "Ksh.12000",
-                    fontSize = 15.sp
-                )
-
-                //Button
-                Button(
-                    onClick = {
-                        val simToolKitLaunchIntent =
-                            mContext.packageManager.getLaunchIntentForPackage("com.android.stk")
-                        simToolKitLaunchIntent?.let { mContext.startActivity(it) }
-                    },
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(Color.Unspecified)
+        },
+        bottomBar = {
+            BottomAppBar(containerColor = Color(0xFF6200EE)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    Text(text = "Pay")
+                    IconButton(onClick = { navController.navigate("home") }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Home", tint = Color.White)
+                    }
+                    IconButton(onClick = { navController.navigate("cart") }) {
+                        Icon(Icons.Default.ShoppingCart, contentDescription = "Cart", tint = Color.White)
+                    }
                 }
-                //End of button
-
             }
-            //End of Column
-
-            Spacer(modifier = Modifier.width(70.dp))
-
-            //Column
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                //Image
-                Image(
-                    painter = painterResource(R.drawable.bed1),
-                    contentDescription = "img",
-                    modifier = Modifier.size(130.dp)
-                        .clip(shape = RoundedCornerShape(10.dp)),
-                    contentScale = ContentScale.FillBounds
-                )
-                //end of image
-
-
-                Text(
-                    text = "Ksh.17000",
-                    fontSize = 15.sp
-                )
-
-                //Button
-                Button(
-                    onClick = {
-                        val simToolKitLaunchIntent =
-                            mContext.packageManager.getLaunchIntentForPackage("com.android.stk")
-                        simToolKitLaunchIntent?.let { mContext.startActivity(it) }
-                    },
-                    shape = RoundedCornerShape(7.dp),
-                    colors = ButtonDefaults.buttonColors(Color.Unspecified)
-                ) {
-                    Text(text = "Pay")
+        },
+        content = { padding ->
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = Modifier
+                    .padding(padding)
+                    .padding(8.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(products) { product ->
+                    ProductCard(product = product) {
+                        cartViewModel.addToCart(product)
+                    }
                 }
-                //End of button
             }
         }
+    )
+}
 
-        Spacer(modifier = Modifier.height(10.dp))
-
-        //Row
-        Row(
-            modifier = Modifier.padding(start = 20.dp).horizontalScroll(
-                rememberScrollState()
-            )
+@Composable
+fun ProductCard(product: Product, onAddToCart: () -> Unit) {
+    Card(
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(6.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(0.9f)
+    ) {
+        Column(
+            modifier = Modifier.padding(12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-            //Column
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                //Image
-                Image(
-                    painter = painterResource(R.drawable.table1),
-                    contentDescription = "img",
-                    modifier = Modifier.size(120.dp)
-                        .clip(shape = RoundedCornerShape(7.dp)),
-                    contentScale = ContentScale.FillBounds
-                )
-                //end of image
-
-                Text(
-                    text = "Ksh.7500",
-                    fontSize = 15.sp
-                )
-
-                //Button
-                Button(
-                    onClick = {
-                        val simToolKitLaunchIntent =
-                            mContext.packageManager.getLaunchIntentForPackage("com.android.stk")
-                        simToolKitLaunchIntent?.let { mContext.startActivity(it) }
-                    },
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(Color.Unspecified)
-                ) {
-                    Text(text = "Pay")
-                }
-                //End of button
-
-            }
-            //End of Column
-
-            Spacer(modifier = Modifier.width(100.dp))
-
-            //Column
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                //Image
-                Image(
-                    painter = painterResource(R.drawable.chair1),
-                    contentDescription = "img",
-                    modifier = Modifier.size(120.dp)
-                        .clip(shape = RoundedCornerShape(7.dp)),
-                    contentScale = ContentScale.FillBounds
-                )
-                //end of image
-
-
-
-                Text(
-                    text = "Ksh.5350",
-                    fontSize = 15.sp
-                )
-
-                //Button
-                Button(
-                    onClick = {
-                        val simToolKitLaunchIntent =
-                            mContext.packageManager.getLaunchIntentForPackage("com.android.stk")
-                        simToolKitLaunchIntent?.let { mContext.startActivity(it) }
-                    },
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(Color.Unspecified)
-                ) {
-                    Text(text = "Pay")
-                }
-                //End of button
+            Image(
+                painter = painterResource(id = product.imageResId),
+                contentDescription = product.name,
+                modifier = Modifier
+                    .size(120.dp)
+                    .clip(RoundedCornerShape(12.dp)),
+                contentScale = ContentScale.Crop
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = product.name,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold,
+                maxLines = 1
+            )
+            Text(
+                text = "Ksh. ${product.price}",
+                fontSize = 14.sp,
+                color = Color.Gray
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            Button(
+                onClick = onAddToCart,
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6200EE))
+            ) {
+                Text("Add to Cart", color = Color.White)
             }
         }
-
-        //Row
-        Row(
-            modifier = Modifier.padding(start = 20.dp).horizontalScroll(
-                rememberScrollState()
-            )
-        ) {
-
-            //Column
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                //Image
-                Image(
-                    painter = painterResource(R.drawable.newsofa),
-                    contentDescription = "img",
-                    modifier = Modifier.size(130.dp)
-                        .clip(shape = RoundedCornerShape(7.dp)),
-                    contentScale = ContentScale.FillBounds
-                )
-                //end of image
-
-
-
-                Text(
-                    text = "Ksh.12000",
-                    fontSize = 15.sp
-                )
-
-                //Button
-                Button(
-                    onClick = {
-                        val simToolKitLaunchIntent =
-                            mContext.packageManager.getLaunchIntentForPackage("com.android.stk")
-                        simToolKitLaunchIntent?.let { mContext.startActivity(it) }
-                    },
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(Color.Unspecified)
-                ) {
-                    Text(text = "Pay")
-                }
-                //End of button
-
-            }
-            //End of Column
-
-            Spacer(modifier = Modifier.width(70.dp))
-
-            //Column
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                //Image
-                Image(
-                    painter = painterResource(R.drawable.bed1),
-                    contentDescription = "img",
-                    modifier = Modifier.size(130.dp)
-                        .clip(shape = RoundedCornerShape(10.dp)),
-                    contentScale = ContentScale.FillBounds
-                )
-                //end of image
-
-
-                Text(
-                    text = "Ksh.17000",
-                    fontSize = 15.sp
-                )
-
-                //Button
-                Button(
-                    onClick = {
-                        val simToolKitLaunchIntent =
-                            mContext.packageManager.getLaunchIntentForPackage("com.android.stk")
-                        simToolKitLaunchIntent?.let { mContext.startActivity(it) }
-                    },
-                    shape = RoundedCornerShape(7.dp),
-                    colors = ButtonDefaults.buttonColors(Color.Unspecified)
-                ) {
-                    Text(text = "Pay")
-                }
-                //End of button
-            }
-        }
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-
     }
-    }
+}
+
 @Preview(showBackground = true)
 @Composable
-fun SofaScreenPreview(){
-    SofaScreen(navController= rememberNavController())
+fun SofaScreenPreview() {
+    SofaScreen(navController = rememberNavController())
 }

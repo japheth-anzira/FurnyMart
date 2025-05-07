@@ -39,6 +39,7 @@ import com.japheth.furnymart.R
 
 @Composable
 fun OnBoardScreen2(navController: NavController){
+    navController.navigate("")
     Column(modifier = Modifier
         .fillMaxSize()
         .padding(25.dp),
