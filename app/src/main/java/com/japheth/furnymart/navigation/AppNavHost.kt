@@ -12,12 +12,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.Japheth.sokomart.ui.screens.products.AddProductScreen
 import com.japheth.furnymart.data.UserDatabase
 import com.japheth.furnymart.repository.UserRepository
 import com.japheth.furnymart.ui.screens.auth.LoginScreen
 import com.japheth.furnymart.ui.screens.auth.RegisterScreen
 import com.japheth.furnymart.ui.screens.cart.CartScreen
 import com.japheth.furnymart.ui.screens.checkout.CheckoutScreen
+import com.japheth.furnymart.ui.screens.products.EditProductScreen
+import com.japheth.furnymart.ui.screens.products.ProductListScreen
 import com.japheth.furnymart.ui.screens.profile.ProfileScreen
 import com.japheth.furnymart.ui.theme.screens.about.AboutScreen
 import com.japheth.furnymart.ui.theme.screens.beds.BedsScreen
@@ -112,6 +115,8 @@ fun AppNavHost(
 
 
 
+
+
         //AUTHENTICATION
 
         // Initialize Room Database and Repository for Authentication
@@ -131,6 +136,26 @@ fun AppNavHost(
                 navController.navigate(ROUT_HOME) {
                     popUpTo(ROUT_LOGIN) { inclusive = true }
                 }
+            }
+        }
+
+
+        // PRODUCTS
+        composable(ROUT_ADD_PRODUCT) {
+            AddProductScreen(navController, productViewModel)
+        }
+
+        composable(ROUT_PRODUCT_LIST) {
+            ProductListScreen(navController, productViewModel)
+        }
+
+        composable(
+            route = ROUT_EDIT_PRODUCT,
+            arguments = listOf(navArgument("productId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val productId = backStackEntry.arguments?.getInt("productId")
+            if (productId != null) {
+                EditProductScreen(productId, navController, productViewModel)
             }
         }
 
