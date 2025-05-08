@@ -1,10 +1,4 @@
-package com.japheth.furnymart.ui.screens.auth
-
 import android.widget.Toast
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -21,21 +15,19 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.*
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.japheth.furnymart.R
 import com.japheth.furnymart.navigation.ROUT_ADD_PRODUCT
-import com.japheth.furnymart.navigation.ROUT_CONTACT
 import com.japheth.furnymart.navigation.ROUT_HOME
 import com.japheth.furnymart.navigation.ROUT_REGISTER
-import com.japheth.furnymart.viewmodel.AuthViewModel
+import com.japheth.furnymart.ui.theme.anothercolor
 
 @Composable
 fun LoginScreen(
@@ -46,10 +38,16 @@ fun LoginScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
+    var emailError by remember { mutableStateOf(false) }
+    var passwordError by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
-    LaunchedEffect(authViewModel) {
-        authViewModel.loggedInUser = { user ->
+    // Observe the logged-in user state
+    val loggedInUser by authViewModel.loggedInUser.collectAsState()
+
+    // Handle login success or failure
+    LaunchedEffect(loggedInUser) {
+        loggedInUser?.let { user ->
             if (user == null) {
                 Toast.makeText(context, "Invalid Credentials", Toast.LENGTH_SHORT).show()
             } else {
@@ -67,135 +65,139 @@ fun LoginScreen(
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(
-                    colors = listOf(Color(0xFF141E30), Color(0xFF243B55))
+                    listOf(Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364))
                 )
             )
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
 
-            Spacer(modifier = Modifier.height(40.dp))
+            Image(
+                painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                contentDescription = "Logo",
+                modifier = Modifier
+                    .size(100.dp)
+                    .padding(bottom = 12.dp)
+            )
 
-            // App Logo
-            AnimatedVisibility(visible = true, enter = fadeIn(tween(1000))) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                    contentDescription = "App Logo",
-                    modifier = Modifier
-                        .size(100.dp)
-                        .padding(bottom = 8.dp)
-                )
-            }
+            Text(
+                text = "FurnyMart",
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White,
+                fontFamily = FontFamily.Serif
+            )
 
-            // Welcome Message
-            AnimatedVisibility(visible = true, enter = fadeIn(tween(1000))) {
-                Text(
-                    text = "Welcome Back!",
-                    fontSize = 32.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
-            }
+            Text(
+                text = "Log in to explore stylish living.",
+                fontSize = 16.sp,
+                color = Color.LightGray,
+                modifier = Modifier.padding(bottom = 32.dp)
+            )
 
-            Spacer(modifier = Modifier.height(30.dp))
-
-            // Login Card
+            // Updated Card Background Color for better UI design
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp)
-                    .shadow(8.dp, RoundedCornerShape(16.dp)),
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White)
+                    .shadow(10.dp, shape = RoundedCornerShape(20.dp)),
+                colors = CardDefaults.cardColors(containerColor = anothercolor), // Soft, modern grey
+                shape = RoundedCornerShape(20.dp),
+                elevation = CardDefaults.cardElevation(8.dp)
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
+                Column(modifier = Modifier.padding(24.dp)) {
 
-                    // Email Input
+                    // Email input field
                     OutlinedTextField(
                         value = email,
-                        onValueChange = { email = it },
+                        onValueChange = {
+                            email = it
+                            emailError = false
+                        },
+                        isError = emailError,
                         label = { Text("Email") },
-                        leadingIcon = { Icon(Icons.Default.Email, contentDescription = "Email") },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                        placeholder = { Text("example@domain.com") },
+                        leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
                         singleLine = true,
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(10.dp)
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                        modifier = Modifier.fillMaxWidth()
                     )
+                    if (emailError) {
+                        Text("Enter a valid email.", color = Color.Red, fontSize = 12.sp)
+                    }
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Password Input
+                    // Password input field
                     OutlinedTextField(
                         value = password,
-                        onValueChange = { password = it },
+                        onValueChange = {
+                            password = it
+                            passwordError = false
+                        },
+                        isError = passwordError,
                         label = { Text("Password") },
-                        leadingIcon = { Icon(Icons.Default.Lock, contentDescription = "Password") },
+                        placeholder = { Text("••••••••") },
+                        singleLine = true,
                         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                        singleLine = true,
+                        leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
                         trailingIcon = {
                             IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                                val visibilityIcon = if (passwordVisible) R.drawable.visibility else R.drawable.visibilityoff
                                 Icon(
-                                    painter = painterResource(id = visibilityIcon),
+                                    imageVector = if (passwordVisible) Icons.Default.Check else Icons.Default.Clear,
                                     contentDescription = if (passwordVisible) "Hide Password" else "Show Password"
                                 )
                             }
-                        }
-                        ,
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(10.dp)
+                        },
+                        modifier = Modifier.fillMaxWidth()
                     )
+                    if (passwordError) {
+                        Text("Password cannot be empty.", color = Color.Red, fontSize = 12.sp)
+                    }
 
                     Spacer(modifier = Modifier.height(24.dp))
 
-                    // Gradient Login Button
+                    // Login Button
                     Button(
                         onClick = {
-                            if (email.isBlank() || password.isBlank()) {
-                                Toast.makeText(context, "Please enter email and password", Toast.LENGTH_SHORT).show()
-                            } else {
+                            val validEmail = email.contains("@") && email.contains(".")
+                            val validPassword = password.isNotBlank()
+
+                            emailError = !validEmail
+                            passwordError = !validPassword
+
+                            if (validEmail && validPassword) {
                                 authViewModel.loginUser(email, password)
+                            } else {
+                                Toast.makeText(context, "Please correct the errors", Toast.LENGTH_SHORT).show()
                             }
                         },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp),
                         shape = RoundedCornerShape(12.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.Transparent
-                        ),
-                        contentPadding = PaddingValues()
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0072FF))
                     ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(
-                                    brush = Brush.horizontalGradient(
-                                        colors = listOf(Color(0xFF00C6FF), Color(0xFF0072FF))
-                                    ),
-                                    shape = RoundedCornerShape(12.dp)
-                                ),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text("Login", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
-                        }
+                        Text("Login", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 16.sp)
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Register Navigation
-                    TextButton(onClick = { navController.navigate(ROUT_REGISTER) }) {
-                        Text("Don't have an account? Register", color = Color.Gray)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text("Don't have an account?", color = Color.Gray)
+                        Spacer(modifier = Modifier.width(4.dp))
+                        TextButton(onClick = { navController.navigate(ROUT_REGISTER) }) {
+                            Text("Register", color = MaterialTheme.colorScheme.primary)
+                        }
                     }
                 }
             }

@@ -1,5 +1,6 @@
 package com.japheth.furnymart.ui.screens.auth
 
+import AuthViewModel
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -29,8 +30,8 @@ import androidx.navigation.compose.rememberNavController
 import com.japheth.furnymart.R
 import com.japheth.furnymart.model.User
 import com.japheth.furnymart.navigation.ROUT_LOGIN
-import com.japheth.furnymart.ui.theme.screens.home.HomeScreen
-import com.japheth.furnymart.viewmodel.AuthViewModel
+import com.japheth.furnymart.navigation.ROUT_HOME
+import com.japheth.furnymart.ui.theme.anothercolor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,7 +68,7 @@ fun RegisterScreen(
                 .padding(16.dp),
             elevation = CardDefaults.cardElevation(12.dp),
             shape = MaterialTheme.shapes.large,
-            colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.95f))
+            colors = CardDefaults.cardColors(containerColor = anothercolor) // Updated color
         ) {
             Column(
                 modifier = Modifier

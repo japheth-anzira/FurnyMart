@@ -1,5 +1,7 @@
 package com.japheth.furnymart.navigation
 
+import AuthViewModel
+import LoginScreen
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
@@ -15,7 +17,6 @@ import androidx.navigation.navArgument
 import com.Japheth.sokomart.ui.screens.products.AddProductScreen
 import com.japheth.furnymart.data.UserDatabase
 import com.japheth.furnymart.repository.UserRepository
-import com.japheth.furnymart.ui.screens.auth.LoginScreen
 import com.japheth.furnymart.ui.screens.auth.RegisterScreen
 import com.japheth.furnymart.ui.screens.cart.CartScreen
 import com.japheth.furnymart.ui.screens.checkout.CheckoutScreen
@@ -26,13 +27,11 @@ import com.japheth.furnymart.ui.theme.screens.about.AboutScreen
 import com.japheth.furnymart.ui.theme.screens.beds.BedsScreen
 import com.japheth.furnymart.ui.theme.screens.chairs.ChairsScreen
 import com.japheth.furnymart.ui.theme.screens.home.HomeScreen
-import com.japheth.furnymart.ui.theme.screens.orderconfirmation.OrderConfirmationScreen
 import com.japheth.furnymart.ui.theme.screens.sofa.SofaScreen
 import com.japheth.furnymart.ui.theme.screens.splash.OnBoardScreen
 import com.japheth.furnymart.ui.theme.screens.splash.OnBoardScreen2
 import com.japheth.furnymart.ui.theme.screens.splash.SplashScreen
 import com.japheth.furnymart.ui.theme.screens.tables.TablesScreen
-import com.japheth.furnymart.viewmodel.AuthViewModel
 import com.japheth.furnymart.viewmodel.ProductViewModel
 
 

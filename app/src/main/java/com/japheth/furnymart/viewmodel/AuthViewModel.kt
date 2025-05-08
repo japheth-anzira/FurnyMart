@@ -1,13 +1,15 @@
-package com.japheth.furnymart.viewmodel
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.japheth.furnymart.model.User
 import com.japheth.furnymart.repository.UserRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class AuthViewModel(private val repository: UserRepository) : ViewModel() {
-    var loggedInUser: ((User?) -> Unit)? = null
+
+    private val _loggedInUser = MutableStateFlow<User?>(null)
+    val loggedInUser: StateFlow<User?> get() = _loggedInUser
 
     fun registerUser(user: User) {
         viewModelScope.launch {
@@ -18,7 +20,7 @@ class AuthViewModel(private val repository: UserRepository) : ViewModel() {
     fun loginUser(email: String, password: String) {
         viewModelScope.launch {
             val user = repository.loginUser(email, password)
-            loggedInUser?.invoke(user)
+            _loggedInUser.value = user
         }
     }
 }

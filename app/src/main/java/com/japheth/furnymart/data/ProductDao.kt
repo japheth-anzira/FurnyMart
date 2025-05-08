@@ -1,4 +1,4 @@
-package com.Japheth.sokomart.data
+package com.japheth.furnymart.data
 
 import androidx.lifecycle.LiveData
 import androidx.room.*

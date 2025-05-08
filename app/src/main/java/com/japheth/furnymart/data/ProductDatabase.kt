@@ -4,10 +4,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.Japheth.sokomart.data.ProductDao
 import com.japheth.furnymart.model.Product
 import com.japheth.furnymart.model.User
-
 @Database(entities = [Product::class, User::class], version = 1, exportSchema = false)
 abstract class ProductDatabase : RoomDatabase() {
     abstract fun productDao(): ProductDao
